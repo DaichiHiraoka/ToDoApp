@@ -19,5 +19,8 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    "no-undef":"error",
+      "no-unused-vars":"error",
+      "react/prop-types":"off",
   },
 ])
