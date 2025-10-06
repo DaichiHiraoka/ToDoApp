@@ -1,7 +1,7 @@
-
 import Form from './Form/Form';
 import Item from './Item/Item'; 
 import { useTodoContext } from './Context/todoContext';
+import {Card, CardHeader, CardContent, CardTitle} from "@/component/ui/card";
 
 const TodoApp = () => {
   const { todos, dispatch } = useTodoContext();
@@ -32,8 +32,6 @@ const TodoApp = () => {
 
   // Todoを削除する関数
   const handleDeleteTodo = (id: number) => {
-    const confirmDelete = window.confirm("本当に削除しますか？");
-    if (!confirmDelete) return;
     dispatch({
       type: "DELETE_TODO",
       payload: { id: id, text: "" }
@@ -45,20 +43,33 @@ const TodoApp = () => {
 
   return (
     <div>
-      <h1>TodoApp</h1>
-      <Form onAddTodo={handleAddTodo} />
-      <p>Uncompleted Tasks: {incompleteTodoCount}</p>
-      <ul style={{ listStyle: 'none', padding: 0 }}>
-        {todos.map((todo) => (
-          <Item
-            key={todo.id}
-            todo={todo}
-            onToggle={toggleTodo}
-            onDelete={handleDeleteTodo}
-            onEdit={handleEditTodo}
-          />
-        ))}
-      </ul>
+      <main className="container mx-auto flex flex-col items-center p-4">
+        <Card className="w-full max-w-2xl">
+          <CardHeader >
+          <CardTitle className="text-2xl font-bold tracking-tight">TodoApp</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+          <Form onAddTodo={handleAddTodo} />
+          <div className="space-y-3">
+            <h2 className="text-lg font-semibold">
+              <p>未完了タスク: {incompleteTodoCount}</p>
+              </h2>
+              
+              <ul style={{ listStyle: 'none', padding: 0 }}>
+                {todos.map((todo) => (
+                  <Item
+                    key={todo.id}
+                    todo={todo}
+                    onToggle={toggleTodo}
+                    onDelete={handleDeleteTodo}
+                    onEdit={handleEditTodo}
+                  />
+                  ))}
+                </ul>
+            </div>
+        </CardContent>
+        </Card>
+      </main>
     </div>
   );
 };
