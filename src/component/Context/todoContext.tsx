@@ -2,6 +2,7 @@ import React, { createContext, useContext, useReducer, type ReactNode } from 're
 import type { Dispatch } from 'react';
 import type { Todo, TodoAction } from "../Reducer/todoReducer";
 import { todoReducer } from "../Reducer/todoReducer";
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 // コンテキストの型定義
 type TodoContextType = {
@@ -19,7 +20,16 @@ type TodoProviderProps = {
 
 // プロバイダーコンポーネント
 export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
-    const [todos, dispatch] = useReducer(todoReducer, []);
+    // ローカルストレージから初期値とセッターを取得
+    const [storedTodos, setStoredTodos] = useLocalStorage<Todo[]>("todos", []);
+    
+    // useReducerの初期値→ローカルストレージから取得した値に変更
+    const [todos, dispatch] = useReducer(todoReducer, storedTodos);
+
+    // todoの状態が変更されていればローカルストレージに変更を加える
+    React.useEffect(() => {
+        setStoredTodos(todos);
+    }, [todos, setStoredTodos]);
 
     const value: TodoContextType = {
         todos,
